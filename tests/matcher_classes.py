@@ -86,13 +86,15 @@ class GenericMatcher(Matcher):
 
 # ======================================================================================
 class TextPresenceMatcher(Matcher):
-    def __init__(self, text: str):
+    def __init__(self, text: Optional[str] = None):
         self.text = text
 
     def run(self, output: str, **kwargs: Any) -> MatchResult:
-        if self.text not in output:
+        text = kwargs.get("text", self.text)
+        assert isinstance(text, str) and text
+        if text not in output:
             return MatchResult(
-                "WRONG RESULT", f"Text not found: '{self.text}'.\n", value=None
+                "WRONG RESULT", f"Text not found: '{text}'.\n", value=None
             )
         return MatchResult("OK", error=None, value=None)
 
